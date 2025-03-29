@@ -3,6 +3,7 @@
 
 #include "framework.h"
 #include "Clean Vehicle Credit Checker.h"
+#include <iostream>
 
 #define MAX_LOADSTRING 100
 
@@ -137,6 +138,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case IDM_EXIT:
                 DestroyWindow(hWnd);
                 break;
+            case IDD_MEOWDYDO:
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_MEOWDYDO), hWnd, About);
+                break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
             }
@@ -147,6 +151,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: Add any drawing code that uses hdc here...
+            LPCWSTR test = L"test";
+            TextOut(hdc, 25, 25, test, wcslen(test));
             EndPaint(hWnd, &ps);
         }
         break;
