@@ -14,11 +14,14 @@
 #define IDR_MAINFRAME                   128
 #define IDD_DIALOG1                     130
 #define IDC_YEAR                        1000
+#define IDC_BUTTON1                     1005
+#define IIDC_CALCULATE                  1006
 #define IDD_MEOWDYDO                    2000
 #define ID_FILE_MEOWDYDO                32771
 #define ID_FUNCTIONS_SEARCH             32772
 #define IDM_SEARCH                      32773
 #define IDD_SEARCHBOX                   32774
+#define IDC_CALCULATE                   32775
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -28,7 +31,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         32775
-#define _APS_NEXT_CONTROL_VALUE         1005
+#define _APS_NEXT_CONTROL_VALUE         1007
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

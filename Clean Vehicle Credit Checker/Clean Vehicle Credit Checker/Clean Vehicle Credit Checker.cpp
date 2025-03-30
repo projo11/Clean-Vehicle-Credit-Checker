@@ -11,6 +11,7 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+TCHAR selection[2048];
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -20,9 +21,9 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Search(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+    _In_opt_ HINSTANCE hPrevInstance,
+    _In_ LPWSTR    lpCmdLine,
+    _In_ int       nCmdShow)
 {
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
@@ -154,9 +155,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
             LPCWSTR test = L"test";
             TextOut(hdc, 25, 25, test, wcslen(test));
+            //TextOut(hdc, 100, 50, stuffToPrint, wcslen(stuffToPrint));
             EndPaint(hWnd, &ps);
         }
         break;
@@ -208,6 +209,17 @@ INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
 
     case WM_COMMAND:
+        if (HIWORD(wParam) == CBN_SELCHANGE) 
+        {
+            int index = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
+            SendMessage((HWND)lParam, CB_GETLBTEXT,(WPARAM)index, (LPARAM)selection);
+            return (INT_PTR)TRUE;
+        }
+        if (LOWORD(wParam) == IDC_CALCULATE)
+        {
+            MessageBox(hDlg, (LPCWSTR)selection, TEXT("Results"), MB_OK);
+            return (INT_PTR)TRUE;
+        }
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
         {
             EndDialog(hDlg, LOWORD(wParam));
