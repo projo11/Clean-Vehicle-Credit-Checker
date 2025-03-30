@@ -17,6 +17,7 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    Search(HWND, UINT, WPARAM, LPARAM);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -135,11 +136,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
             case IDD_MEOWDYDO:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_MEOWDYDO), hWnd, About);
+                break;
+            case IDM_SEARCH:
+                DialogBox(hInst, MAKEINTRESOURCE(IDD_SEARCHBOX), hWnd, Search);
+                break;
+            case IDM_EXIT:
+                DestroyWindow(hWnd);
                 break;
             default:
                 return DefWindowProc(hWnd, message, wParam, lParam);
@@ -184,3 +188,33 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return (INT_PTR)FALSE;
 }
+
+INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    UNREFERENCED_PARAMETER(lParam);
+    HWND dlg;
+    switch (message)
+    {
+    case WM_INITDIALOG:
+        dlg = GetDlgItem(hDlg, IDC_YEAR);
+        if (dlg == NULL) {
+            return (INT_PTR)FALSE;
+        }
+        SendMessage(dlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"Hewwo!"));
+        SendMessage(dlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"Hiiiiiiiii!"));
+
+        SendMessage(dlg, CB_SETCURSEL, 0, 0);
+        return (INT_PTR)TRUE;
+
+
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
+    return (INT_PTR)FALSE;
+}
+
