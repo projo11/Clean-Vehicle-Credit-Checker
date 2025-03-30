@@ -11,7 +11,7 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-TCHAR selection[2048];
+TCHAR year[256], make[256];
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -193,18 +193,26 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
-    HWND dlg;
+    HWND yearDlg, makeDlg;
+    yearDlg = GetDlgItem(hDlg, IDC_YEAR);
+    makeDlg = GetDlgItem(hDlg, IDC_MAKE);
     switch (message)
     {
     case WM_INITDIALOG:
-        dlg = GetDlgItem(hDlg, IDC_YEAR);
-        if (dlg == NULL) {
-            return (INT_PTR)FALSE;
-        }
-        SendMessage(dlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"Hewwo!"));
-        SendMessage(dlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"Hiiiiiiiii!"));
 
-        SendMessage(dlg, CB_SETCURSEL, 0, 0);
+        SendMessage(yearDlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"Select..."));
+        SendMessage(yearDlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"2023"));
+        SendMessage(yearDlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"2024"));
+
+        SendMessage(yearDlg, CB_SETCURSEL, 0, 0);
+
+
+        SendMessage(makeDlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"Select..."));
+        SendMessage(makeDlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"Audi"));
+        SendMessage(makeDlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"General Motors"));
+
+        SendMessage(makeDlg, CB_SETCURSEL, 0, 0);
+
         return (INT_PTR)TRUE;
 
 
@@ -212,12 +220,14 @@ INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         if (HIWORD(wParam) == CBN_SELCHANGE) 
         {
             int index = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
-            SendMessage((HWND)lParam, CB_GETLBTEXT,(WPARAM)index, (LPARAM)selection);
+            SendMessage((HWND)lParam, CB_GETLBTEXT,(WPARAM)index, (LPARAM)year);
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDC_CALCULATE)
         {
-            MessageBox(hDlg, (LPCWSTR)selection, TEXT("Results"), MB_OK);
+            int index = SendMessage(makeDlg, CB_GETCURSEL, 0, 0);
+            SendMessage(makeDlg, CB_GETLBTEXT, (WPARAM)index, (LPARAM)make);
+            MessageBox(hDlg, (LPCWSTR)make, TEXT("Currently selected make"), MB_OK);
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)

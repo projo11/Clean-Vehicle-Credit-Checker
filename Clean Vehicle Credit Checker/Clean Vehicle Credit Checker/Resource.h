@@ -14,6 +14,8 @@
 #define IDR_MAINFRAME                   128
 #define IDD_DIALOG1                     130
 #define IDC_YEAR                        1000
+#define IDC_MAKE                        1001
+#define IDC_YEAR3                       1002
 #define IDC_BUTTON1                     1005
 #define IIDC_CALCULATE                  1006
 #define IDD_MEOWDYDO                    2000
