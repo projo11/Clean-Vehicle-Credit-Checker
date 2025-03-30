@@ -11,7 +11,7 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
-TCHAR year[256], make[256];
+TCHAR year[256], make[256];                     // the currently selected year and make
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -19,6 +19,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Search(HWND, UINT, WPARAM, LPARAM);
+LPCWSTR             Results(LPCWSTR, LPCWSTR);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -157,7 +158,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hWnd, &ps);
             LPCWSTR test = L"test";
             TextOut(hdc, 25, 25, test, wcslen(test));
-            //TextOut(hdc, 100, 50, stuffToPrint, wcslen(stuffToPrint));
             EndPaint(hWnd, &ps);
         }
         break;
@@ -219,15 +219,23 @@ INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
         if (HIWORD(wParam) == CBN_SELCHANGE) 
         {
-            int index = SendMessage((HWND)lParam, CB_GETCURSEL, 0, 0);
-            SendMessage((HWND)lParam, CB_GETLBTEXT,(WPARAM)index, (LPARAM)year);
+            // Currently nothing, in the future would add the ability to populate model based on make
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDC_CALCULATE)
         {
-            int index = SendMessage(makeDlg, CB_GETCURSEL, 0, 0);
+            int index;
+            // get selected year
+            index = SendMessage(yearDlg, CB_GETCURSEL, 0, 0);
+            SendMessage(yearDlg, CB_GETLBTEXT, (WPARAM)index, (LPARAM)year);
+
+            // get selected make
+            index = SendMessage(makeDlg, CB_GETCURSEL, 0, 0);
             SendMessage(makeDlg, CB_GETLBTEXT, (WPARAM)index, (LPARAM)make);
-            MessageBox(hDlg, (LPCWSTR)make, TEXT("Currently selected make"), MB_OK);
+
+            // get results based on year and make selection
+
+            MessageBox(hDlg, Results(year, make), TEXT("Currently selected make"), MB_OK);
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
@@ -238,5 +246,12 @@ INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+
+LPCWSTR Results(LPCWSTR year, LPCWSTR make) {
+    if (!lstrcmpW(year, L"2023")) {
+        return (LPCWSTR)L"woah we did it!";
+    }
+    return (LPCWSTR)L"mooo";
 }
 
