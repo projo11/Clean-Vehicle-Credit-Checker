@@ -4,6 +4,7 @@
 #include "framework.h"
 #include "Clean Vehicle Credit Checker.h"
 #include <iostream>
+#include <vector>
 
 #define MAX_LOADSTRING 100
 
@@ -19,7 +20,7 @@ BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    Search(HWND, UINT, WPARAM, LPARAM);
-LPCWSTR             Results(LPCWSTR, LPCWSTR);
+std::wstring        Results(LPCWSTR, LPCWSTR);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -235,7 +236,10 @@ INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 
             // get results based on year and make selection
 
-            MessageBox(hDlg, Results(year, make), TEXT("Currently selected make"), MB_OK);
+
+            // Results(year, make)
+            std::wstring test = L"shmoodle";
+            MessageBox(hDlg, Results(year, make).c_str(), TEXT("Currently selected make"), MB_OK);
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
@@ -248,10 +252,43 @@ INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
-LPCWSTR Results(LPCWSTR year, LPCWSTR make) {
-    if (!lstrcmpW(year, L"2023")) {
-        return (LPCWSTR)L"woah we did it!";
+std::wstring Results(LPCWSTR year, LPCWSTR make) {
+    // sample data, would eventually be parsed from a .csv file
+    std::vector<std::vector<std::wstring>> data = { 
+        {
+            L"2023", 
+            L"Audi", 
+
+            L"Make: Audi\n"
+            L"Model: Q5 PHEV 55 TFSI e quattro\n"
+            L"Vehicle Model Year: 2023\n"
+            L"Applicable MSRP Limit: $80,000\n"
+            L"Cridit Amount: $3,750\n\n"
+        }, 
+        {
+            L"2024",
+            L"Chevrolet",
+
+            L"Make: Chevrolet\n"
+            L"Model: Blazer\n"
+            L"Vehicle Model Year: 2024\n"
+            L"Applicable MSRP Limit: $80,000\n"
+            L"Cridit Amount: $7,500\n\n"
+        }
+    };
+
+    std::wstring output = L"";
+    
+    // Filter the results by our search query
+    for (std::vector<std::wstring> vec : data) {
+        if ((!lstrcmpW(year, vec[0].c_str()) || !lstrcmpW(year, L"Select...")) && (!lstrcmpW(make, vec[1].c_str()) || !lstrcmpW(make, L"Select..."))) {
+            //add to return
+            output += vec[2];
+        }
     }
-    return (LPCWSTR)L"mooo";
+    if (output == L"") {
+        output += L"No results match your query.";
+    }
+    return output;
 }
 
