@@ -157,7 +157,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            LPCWSTR test = L"test";
+            LPCWSTR test = L"Please select a function from the menu bar to begin.";
             TextOut(hdc, 25, 25, test, wcslen(test));
             EndPaint(hWnd, &ps);
         }
@@ -200,7 +200,8 @@ INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_INITDIALOG:
-
+        // Currently manually adding info to the dropdowns, 
+        // would eventually be based on the parsed cvs data
         SendMessage(yearDlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"Select..."));
         SendMessage(yearDlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"2023"));
         SendMessage(yearDlg, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"2024"));
@@ -235,11 +236,7 @@ INT_PTR CALLBACK Search(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             SendMessage(makeDlg, CB_GETLBTEXT, (WPARAM)index, (LPARAM)make);
 
             // get results based on year and make selection
-
-
-            // Results(year, make)
-            std::wstring test = L"shmoodle";
-            MessageBox(hDlg, Results(year, make).c_str(), TEXT("Currently selected make"), MB_OK);
+            MessageBox(hDlg, Results(year, make).c_str(), TEXT("Search Results"), MB_OK);
             return (INT_PTR)TRUE;
         }
         if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
